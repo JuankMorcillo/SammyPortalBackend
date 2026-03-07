@@ -32,8 +32,14 @@ export class PostsService {
     return `This action returns a #${id} post`;
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async update(id: number, updatePostDto: UpdatePostDto): Promise<GenericResponsesDto> {
+
+    const updatedPost = await this.postsRepository.update(id, updatePostDto);
+
+    if (updatedPost) return { message: 'Post correctly updated', statusCode: 200, error: '' }
+
+    throw new BadRequestException('Error updating the post');
+
   }
 
   remove(id: number) {

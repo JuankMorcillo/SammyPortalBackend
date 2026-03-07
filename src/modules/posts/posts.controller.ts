@@ -27,7 +27,10 @@ export class PostsController {
     return this.postsService.findOne(+id);
   }
 
+  @ApiOperation({ summary: 'Update post' })
   @Patch(':id')
+  @ApiBody({ type: UpdatePostDto })
+  @ApiResponse({ description: 'The record has been successfully updated.', status: 200 })
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.update(+id, updatePostDto);
   }
