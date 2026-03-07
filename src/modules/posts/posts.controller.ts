@@ -18,12 +18,14 @@ export class PostsController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'List all active posts' })
   findAll() {
     return this.postsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  @ApiOperation({ summary: 'List posts by author_user_id' })
+  findByAuthorUserId(@Param('id') id: string) {
     return this.postsService.findOne(+id);
   }
 

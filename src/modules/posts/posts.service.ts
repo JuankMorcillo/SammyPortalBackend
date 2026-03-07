@@ -24,12 +24,29 @@ export class PostsService {
 
   }
 
-  findAll() {
-    return `This action returns all posts`;
+  async findAll() {
+
+    const posts = await this.postsRepository.find({
+      where: { status: 1 },
+      select: ['id', 'authorUserId', 'title', 'content', 'created_at']
+    });
+
+    if (posts) return posts;
+
+    throw new BadRequestException('Error fetching the posts');
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: number) {
+
+    const posts = await this.postsRepository.find({
+      where: { authorUserId: id, status: 1 },
+      select: ['id', 'authorUserId', 'title', 'content', 'created_at']
+    });
+
+    if (posts) return posts;
+
+    throw new BadRequestException('Error fetching the posts');
+    
   }
 
   async update(id: number, updatePostDto: UpdatePostDto): Promise<GenericResponsesDto> {
