@@ -7,6 +7,7 @@ import databaseConfig from './config/database.config';
 import swaggerConfig from './config/swagger.config';
 import { validateEnv } from './config/env.validation';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       useFactory: (configService: ConfigService) => ({
         ...configService.get('database'),
       }),
-    })    
+    }),
+    UsersModule    
   ],
   controllers: [AppController],
   providers: [
