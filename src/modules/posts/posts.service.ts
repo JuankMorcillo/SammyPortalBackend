@@ -42,7 +42,12 @@ export class PostsService {
 
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: number) {
+    const removedPost = await this.postsRepository.update(id, { status: 0 });
+
+    if (removedPost) return { message: 'Post correctly removed', statusCode: 200, error: '' }
+
+    throw new BadRequestException('Error removing the post');
+
   }
 }

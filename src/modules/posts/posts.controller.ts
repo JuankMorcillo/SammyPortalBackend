@@ -35,7 +35,9 @@ export class PostsController {
     return this.postsService.update(+id, updatePostDto);
   }
 
+  @ApiOperation({ summary: 'Remove post' })
   @Delete(':id')
+  @ApiResponse({ description: 'The record has been successfully removed.', status: 200 })
   remove(@Param('id') id: string) {
     return this.postsService.remove(+id);
   }
