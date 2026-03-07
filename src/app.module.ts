@@ -8,6 +8,7 @@ import swaggerConfig from './config/swagger.config';
 import { validateEnv } from './config/env.validation';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module';
+import { PostsModule } from './modules/posts/posts.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { UsersModule } from './modules/users/users.module';
         ...configService.get('database'),
       }),
     }),
-    UsersModule    
+    UsersModule,
+    PostsModule    
   ],
   controllers: [AppController],
   providers: [
