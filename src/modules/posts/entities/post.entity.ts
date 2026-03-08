@@ -14,6 +14,9 @@ export class Post {
     @Column({ nullable: true })
     content: string;
 
+    @Column({nullable: true})
+    url_image: string;
+
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 

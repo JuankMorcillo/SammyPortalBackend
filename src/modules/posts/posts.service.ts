@@ -28,7 +28,7 @@ export class PostsService {
 
     const posts = await this.postsRepository.find({
       where: { status: 1 },
-      select: ['id', 'authorUserId', 'title', 'content', 'created_at']
+      select: ['id', 'authorUserId', 'title', 'content', 'url_image', 'created_at']
     });
 
     if (posts) return posts;
@@ -40,13 +40,13 @@ export class PostsService {
 
     const posts = await this.postsRepository.find({
       where: { authorUserId: id, status: 1 },
-      select: ['id', 'authorUserId', 'title', 'content', 'created_at']
+      select: ['id', 'authorUserId', 'title', 'content', 'url_image', 'created_at']
     });
 
     if (posts) return posts;
 
     throw new BadRequestException('Error fetching the posts');
-    
+
   }
 
   async update(id: number, updatePostDto: UpdatePostDto): Promise<GenericResponsesDto> {
