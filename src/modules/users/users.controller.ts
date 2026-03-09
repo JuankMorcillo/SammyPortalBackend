@@ -17,4 +17,11 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @ApiOperation({ summary: 'Check if user is registered' })
+  @Get(':email')  
+  @ApiResponse({ description: 'The user has been search.', status: 200 })
+  findByEmail(@Param('email') email: string): Promise<User> {
+    return this.usersService.isRegistered(email);
+  }
+
 }

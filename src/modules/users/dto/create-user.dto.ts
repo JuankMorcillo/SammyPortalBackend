@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsEmail, IsNumber, IsString } from "class-validator";
+import { IsEmail, IsNumber, IsString, Validate } from "class-validator";
+import { userExistsConstraint } from "../decorators/user.validator";
 
 export class CreateUserDto {
 
@@ -17,6 +18,7 @@ export class CreateUserDto {
 
     @ApiProperty({ example: 'email@email.com', description: 'Email address of the user' })
     @IsEmail()
+    @Validate(userExistsConstraint)
     email: string;
 
     @ApiPropertyOptional({ example: 'https://example.com/avatar.jpg', description: 'URL of the user avatar' })

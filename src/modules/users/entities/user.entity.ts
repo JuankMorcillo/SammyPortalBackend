@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Post } from "src/modules/posts/entities/post.entity";
+import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
 
 @Entity('users')
 export class User {
@@ -22,4 +23,7 @@ export class User {
 
     @Column({ nullable: true, type: 'timestamp', onUpdate: 'CURRENT_TIMESTAMP' })
     updated_at: Date;
+
+    @OneToMany(() => Post, post => post.user)
+    posts: Post[];
 }
