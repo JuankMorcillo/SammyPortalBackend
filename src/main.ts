@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { useContainer } from 'class-validator';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -15,7 +15,14 @@ async function bootstrap() {
     whitelist: true,
     transform: true,
     transformOptions: {
-      enableImplicitConversion: true, // Esto permite que '1' pase a 1 automáticamente
+      enableImplicitConversion: true,
+    },
+    exceptionFactory: (errors) => {
+      const messages = errors
+        .flatMap(error => Object.values(error.constraints || {}))
+        .join(', ');
+
+      throw new BadRequestException(messages);
     }
   }));
 
