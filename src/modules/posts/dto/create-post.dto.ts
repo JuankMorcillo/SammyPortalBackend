@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsString } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreatePostDto {
 
@@ -15,7 +15,8 @@ export class CreatePostDto {
     @IsString()
     content: string;
 
-    @ApiProperty({ description: 'URL de la imagen del post', example: 'https://example.com/image.jpg' })
+    @ApiPropertyOptional({ description: 'URL de la imagen del post', example: 'https://example.com/image.jpg' })
+    @IsOptional()
     @IsString()
     url_image: string;
 }
