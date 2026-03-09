@@ -24,14 +24,103 @@ export class PostsService {
 
   }
 
-  async findAll() {
+  async findAll(userName?: string, title?: string, order: 'ASC' | 'DESC' = 'ASC') {
 
-    const posts = await this.postsRepository.find({
-      where: { status: 1 },
-      select: ['id', 'authorUserId', 'title', 'content', 'url_image', 'created_at']
-    });
+    let query = this.postsRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.user', 'user')
+      .where('post.status = :status', { status: 1 });
 
-    if (posts) return posts;
+    if (userName) {
+      query = query.andWhere(
+        '(user.first_name LIKE :userName OR user.last_name LIKE :userName)',
+        { userName: `%${userName}%` }
+      );
+    }
+
+    if (title) {
+      query = query.orWhere('post.title LIKE :title', { title: `%${title}%` });
+    }
+
+    if (order) {
+      query = query.orderBy('post.created_at', order);
+    }
+
+    const posts = await query
+      .select([
+        'post.id',
+        'post.authorUserId',
+        'post.title',
+        'post.content',
+        'post.url_image',
+        "DATE_FORMAT(post.created_at, '%m-%d-%Y %H:%i:%s') as created_at",
+        'user.first_name',
+        'user.last_name',
+        'user.avatar'
+      ])
+      .getRawMany();
+
+    if (posts.length > 0) {
+      return posts.map(post => ({
+        id: post.post_id,
+        authorUserId: post.post_authorUserId,
+        title: post.post_title,
+        content: post.post_content,
+        url_image: post.post_url_image,
+        created_at: post.created_at,
+        user: {
+          first_name: post.user_first_name,
+          last_name: post.user_last_name,
+          avatar: post.user_avatar
+        }
+      }));
+    }
+
+    throw new BadRequestException('Error fetching the posts');
+  }
+
+  async findAllByUserId(id: number, title?: string,) {
+
+    let query = this.postsRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.user', 'user')
+      .where('post.authorUserId = :id', { id })
+      .orderBy('post.created_at', 'DESC')
+    if (title) {
+      query = query.andWhere('post.title LIKE :title', { title: `%${title}%` });
+    }
+
+    const posts = await query
+      .select([
+        'post.id',
+        'post.authorUserId',
+        'post.title',
+        'post.content',
+        'post.url_image',
+        'post.status',
+        "DATE_FORMAT(post.created_at, '%m-%d-%Y %H:%i:%s') as created_at",
+        'user.first_name',
+        'user.last_name',
+        'user.avatar'
+      ])
+      .getRawMany();
+
+    if (posts.length > 0) {
+      return posts.map(post => ({
+        id: post.post_id,
+        authorUserId: post.post_authorUserId,
+        title: post.post_title,
+        content: post.post_content,
+        url_image: post.post_url_image,
+        created_at: post.created_at,
+        status: post.post_status,
+        user: {
+          first_name: post.user_first_name,
+          last_name: post.user_last_name,
+          avatar: post.user_avatar
+        }
+      }));
+    }
 
     throw new BadRequestException('Error fetching the posts');
   }
