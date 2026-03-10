@@ -1,0 +1,47 @@
+service: sammy-backend
+
+provider:
+  deploymentBucket:
+    name: sammy-bucket-deploy
+  name: aws
+  runtime: nodejs24.x
+  architecture: arm64
+  region: us-east-1
+  stage: production
+  memorySize: 1024
+  timeout: 10
+  logRetentionInDays: 1
+
+functions:
+  api:
+    handler: dist/lambda.handler
+    events:
+      - httpApi:
+          method: any
+          path: /{proxy+}
+          cors: true
+
+package:
+  patterns:
+    - 'dist/**'
+    - 'node_modules/**'
+    - '!node_modules/@types/**'
+    - '!node_modules/typescript/**'
+    - '!node_modules/ts-node/**'
+    - '!node_modules/jest/**'
+    - '!node_modules/@nestjs/schematics/**'
+    - '!node_modules/@nestjs/testing/**'
+    - '!node_modules/eslint*/**'
+    - '!node_modules/prettier/**'
+    - '!node_modules/serverless/**'
+    - '!node_modules/serverless-offline/**'
+    - '!**/*.map'
+    - '!**/*.spec.js'
+    - '!**/*.d.ts'
+
+build:
+  esbuild: false
+
+plugins:
+  - serverless-offline
+  - serverless-dotenv-plugin
