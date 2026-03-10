@@ -74,9 +74,9 @@ export class PostsService {
           avatar: post.user_avatar
         }
       }));
+    } else {
+      return [];
     }
-
-    throw new BadRequestException('Error fetching the posts');
   }
 
   async findAllByUserId(id: number, title?: string,) {
@@ -120,9 +120,9 @@ export class PostsService {
           avatar: post.user_avatar
         }
       }));
+    } else {
+      return [];
     }
-
-    throw new BadRequestException('Error fetching the posts');
   }
 
   async findOne(id: number) {
